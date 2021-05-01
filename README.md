@@ -18,12 +18,11 @@ Everyone is welcome to our [Discourse community](https://react-native-webrtc.dis
 * Currently used revision: [M84](https://github.com/jitsi/webrtc/commit/dc40d5cc81e8fe9aa1cd78a38ee8bb9e91ec49a0)
 * Supported architectures
   * Android: armeabi-v7a, arm64-v8a, x86, x86_64
-  * iOS: arm64, x86_64 (for bitcode support, run [this script](https://github.com/react-native-webrtc/react-native-webrtc/blob/master/tools/downloadBitcode.sh))
+
 
 ## Installation
 
-- [iOS](https://github.com/react-native-webrtc/react-native-webrtc/blob/master/Documentation/iOSInstallation.md)
-- [Android](https://github.com/react-native-webrtc/react-native-webrtc/blob/master/Documentation/AndroidInstallation.md)
+  Clone the repo and make a link to your main app
 
 ## Usage
 Now, you can use WebRTC like in browser.
@@ -131,6 +130,18 @@ This is useful to make existing WebRTC JavaScript libraries (that expect those g
 
 This function allows to switch the front / back cameras in a video track
 on the fly, without the need for adding / removing tracks or renegotiating.
+
+#### MediaStreamTrack.setZoom()
+
+This function allows to change the zoom of the local track.
+
+#### MediaStreamTrack.switchFlash()
+
+This function allows to turn on/off the cellphone flashlight
+
+#### MediaStreamTrack.takePicture()
+
+This function allows to take a picture of the local stream.
 
 #### VideoTrack.enabled
 
