@@ -58,13 +58,15 @@ class GetUserMediaImpl {
 
         boolean camera2supported = false;
 
-        try {
+        //MINE
+        //TODO Support for CAM 2 API
+        /*try {
             camera2supported = Camera2Enumerator.isSupported(reactContext);
         } catch (Throwable tr) {
             // Some devices will crash here with: Fatal Exception: java.lang.AssertionError: Supported FPS ranges cannot be null.
             // Make sure we don't.
             Log.w(TAG, "Error checking for Camera2 API support.", tr);
-        }
+        }*/
 
         if (camera2supported) {
             Log.d(TAG, "Creating video capturer using Camera2 API.");
@@ -412,4 +414,35 @@ class GetUserMediaImpl {
     private interface BiConsumer<T, U> {
         void accept(T t, U u);
     }
+
+    //MINE
+    void setZoom(String trackId, int percentage) {
+        TrackPrivate track = tracks.get(trackId);
+        if (track != null && track.videoCaptureController instanceof CameraCaptureController) {
+            CameraCaptureController cameraCaptureController = (CameraCaptureController) track.videoCaptureController;
+            cameraCaptureController.setZoom(percentage);
+        }
+    }
+
+    void switchFlash(String trackId){
+        TrackPrivate track = tracks.get(trackId);
+        if (track != null && track.videoCaptureController instanceof CameraCaptureController) {
+            CameraCaptureController cameraCaptureController = (CameraCaptureController) track.videoCaptureController;
+            cameraCaptureController.switchFlash();
+        }
+    }
+
+    void takePhoto(final ReadableMap options, final Callback successCallback, final Callback errorCallback, String trackId){
+        TrackPrivate track = tracks.get(trackId);
+        if (track != null && track.videoCaptureController instanceof CameraCaptureController) {
+            CameraCaptureController cameraCaptureController = (CameraCaptureController) track.videoCaptureController;
+            cameraCaptureController.takePhoto(options, successCallback, errorCallback);
+        }
+    }
+
+
+
+
+
+
 }

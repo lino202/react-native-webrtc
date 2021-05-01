@@ -3,6 +3,7 @@ package com.oney.WebRTCModule;
 import android.util.Log;
 
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.Callback;
 
 import org.webrtc.CameraEnumerator;
 import org.webrtc.CameraVideoCapturer;
@@ -19,6 +20,11 @@ public class CameraCaptureController extends AbstractVideoCaptureController {
         = CameraCaptureController.class.getSimpleName();
 
     private boolean isFrontFacing;
+
+    //MINE
+    private boolean flashEnabled = false;
+    private int zoomValue = 0;
+    private MyCameraCapturer myVideoCapturer;
 
     private final CameraEnumerator cameraEnumerator;
     private final ReadableMap constraints;
@@ -51,6 +57,10 @@ public class CameraCaptureController extends AbstractVideoCaptureController {
             if (deviceCount < 2) {
                 return;
             }
+
+            //MINE
+            this.zoomValue = 0;
+            this.flashEnabled = false;
 
             // The usual case.
             if (deviceCount == 2) {
@@ -174,6 +184,11 @@ public class CameraCaptureController extends AbstractVideoCaptureController {
             if (videoCapturer != null) {
                 Log.d(TAG, message + " succeeded");
                 this.isFrontFacing = cameraEnumerator.isFrontFacing(name);
+                
+                //MINE
+                this.myVideoCapturer = (MyCameraCapturer) videoCapturer;                
+                
+                
                 return videoCapturer;
             } else {
                 Log.d(TAG, message + " failed");
@@ -202,5 +217,28 @@ public class CameraCaptureController extends AbstractVideoCaptureController {
         Log.w(TAG, "Unable to identify a suitable camera.");
 
         return null;
+    }
+
+    //MINE
+    public void setZoom(final int percentage){
+        try{
+            if(this.myVideoCapturer.isZoomSupported()){
+                final int value = this.myVideoCapturer.getMaxZoom() * percentage / 100;
+                this.myVideoCapturer.setZoom(value);
+                this.zoomValue = value;
+            }
+        }catch(final MyCameraCapturer.CameraException e){
+            Log.i("CAMERA EXCEPTION ", e.getMessage() + e.getCause());
+        }
+
+    }
+
+    public void switchFlash(){
+        this.myVideoCapturer.switchFlash(!flashEnabled);
+        flashEnabled = !flashEnabled;
+    }
+
+    public void takePhoto(final ReadableMap options, final Callback successCallback, final Callback errorCallback){
+        this.myVideoCapturer.takePicture(options, successCallback, errorCallback, this.zoomValue, this.flashEnabled);
     }
 }

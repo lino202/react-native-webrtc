@@ -964,4 +964,30 @@ public class WebRTCModule extends ReactContextBaseJavaModule {
             pco.dataChannelSend(dataChannelId, data, type);
         }
     }
+
+    @ReactMethod
+    public void mediaStreamTrackZoom(String id, int percentage) {
+        MediaStreamTrack track = getLocalTrack(id);
+        if (track != null) {
+            getUserMediaImpl.setZoom(id, percentage);
+        }
+    }
+
+    @ReactMethod
+    public void mediaStreamTrackFlash(String id){
+        MediaStreamTrack track = getLocalTrack(id);
+        if (track != null) {
+            getUserMediaImpl.switchFlash(id);
+        }
+    }
+
+
+    @ReactMethod
+    public void mediaStreamTrackTakePhoto(final ReadableMap options, final Callback successCallback, final Callback errorCallback){
+        MediaStreamTrack track = getLocalTrack(options.getString("streamId"));
+        if (track != null) {
+            getUserMediaImpl.takePhoto(options, successCallback, errorCallback, options.getString("streamId"));
+        }
+    }
+
 }

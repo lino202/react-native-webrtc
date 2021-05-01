@@ -18,6 +18,30 @@ const MEDIA_STREAM_TRACK_EVENTS = [
 
 type MediaStreamTrackState = "live" | "ended";
 
+
+//MINE
+type SnapshotOptions = {
+  maxSize: number,
+  maxJpegQuality: number,
+};
+  
+function convertToNativeOptions(options){
+  let mutableDefaults = {};
+  mutableDefaults.maxSize = MediaStreamTrack.defaults.maxSize;
+  mutableDefaults.maxJpegQuality = MediaStreamTrack.defaults.maxJpegQuality;
+
+  const mergedOptions = Object.assign(mutableDefaults, options);
+
+  if (typeof mergedOptions.captureTarget === 'string') {
+    mergedOptions.captureTarget = WebRTCModule.CaptureTarget[options.captureTarget];
+  }
+
+  return mergedOptions;
+}
+
+
+
+
 class MediaStreamTrack extends EventTarget(MEDIA_STREAM_TRACK_EVENTS) {
   _constraints: Object;
   _enabled: boolean;
@@ -33,6 +57,22 @@ class MediaStreamTrack extends EventTarget(MEDIA_STREAM_TRACK_EVENTS) {
   onmute: ?Function;
   onunmute: ?Function;
   overconstrained: ?Function;
+
+  //MINE
+  static constants = {
+    captureTarget: {
+      memory: 'memory',
+      temp: 'temp',
+      disk: 'disk',
+      cameraRoll: 'cameraRoll'
+    }
+  };
+    
+  static defaults = {
+    captureTarget: MediaStreamTrack.constants.captureTarget.temp,
+    maxSize: 2000,
+    maxJpegQuality: 1
+  };
 
   constructor(info) {
     super();
@@ -109,6 +149,29 @@ class MediaStreamTrack extends EventTarget(MEDIA_STREAM_TRACK_EVENTS) {
   release() {
     WebRTCModule.mediaStreamTrackRelease(this.id);
   }
+
+  setZoom(percentage){
+    if (this.kind !== 'video') {
+      throw new Error('Only implemented for video tracks');
+    }
+    WebRTCModule.mediaStreamTrackZoom(this.id, percentage);
+  }
+
+  switchFlash(){
+    if (this.kind !== 'video') {
+      throw new Error('Only implemented for video tracks');
+    }
+    WebRTCModule.mediaStreamTrackFlash(this.id);
+  }
+
+  // TODO: restrict option values resp. document them
+  takePicture(options: SnapshotOptions, success: (any) => {}, error: (any) => {}) {
+    let nativeOptions = convertToNativeOptions(options);
+    WebRTCModule.mediaStreamTrackTakePhoto(nativeOptions, success, error);
+  }
+
+
+  
 }
 
 export default MediaStreamTrack;
