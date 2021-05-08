@@ -4,7 +4,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/react-native-webrtc.svg?maxAge=2592000)](https://img.shields.io/npm/dm/react-native-webrtc.svg?maxAge=2592000)
 
 A WebRTC module for React Native.
-- Support iOS / Android.
+- Support Android.
 - Support Video / Audio / Data Channels.
 
 **NOTE** for Expo users: this plugin doesn't work unless you eject.
@@ -26,7 +26,7 @@ Everyone is welcome to our [Discourse community](https://react-native-webrtc.dis
 
 ## Usage
 Now, you can use WebRTC like in browser.
-In your `index.ios.js`/`index.android.js`, you can require WebRTC to import RTCPeerConnection, RTCSessionDescription, etc.
+In your `index.android.js`, you can require WebRTC to import RTCPeerConnection, RTCSessionDescription, etc.
 
 ```javascript
 import {
